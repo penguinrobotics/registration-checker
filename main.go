@@ -136,7 +136,7 @@ func sendSlackMessage(webhookURL, eventName string, missingTeams []Team) error {
 	if len(missingTeams) == 0 {
 		message = fmt.Sprintf("No teams are missing for event %s.", eventName)
 	} else {
-		message = fmt.Sprintf("*Missing teams for* `%s`:\n\n", eventName)
+		message = fmt.Sprintf("*Team(s) dropped out from* `%s`:\n\n", eventName)
 		for _, team := range missingTeams {
 			message += fmt.Sprintf("`%s` - `%s`\n", team.Number, team.Organization)
 		}
@@ -199,7 +199,7 @@ func main() {
 
 		// Check for missing teams if previous data exists
 		if prevTeams != nil {
-			missingTeams := findMissingTeams(prevTeams.Data, []Team{}) //currTeams.Data)
+			missingTeams := findMissingTeams(prevTeams.Data, currTeams.Data)
 			if len(missingTeams) > 0 {
 				eventName, err := fetchEventName(token, eventID)
 				if err != nil {
